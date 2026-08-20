@@ -1,0 +1,43 @@
+﻿using MediatR;
+using Mostra.Application.Interfaces;
+using Mostra.Domain.Entities;
+
+
+namespace Mostra.Application.Products.CreateProduct
+{
+    public class CreateProductHandler : IRequestHandler<CreateProductRequestDto, CreateProductResponseDto>
+    {
+        private readonly IProductRepository _repository;
+
+        public CreateProductHandler(IProductRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<CreateProductResponseDto> Handle(CreateProductRequestDto requestDto, CancellationToken cancellationToken)
+        {
+            var product = new Product()
+            {
+                ProductName = requestDto.ProductName,
+                ProductDescription = requestDto.ProductDescription,
+                ProductPrice = requestDto.ProductPrice,
+                ProductIsOnStock = requestDto.ProductIsOnStock
+            };
+
+            var savedProduct = await _repository.CreateProductAsync(product, cancellationToken);
+
+
+            var response = new CreateProductResponseDto()
+            {
+                Id = savedProduct.Id,
+                ProductName = savedProduct.ProductName,
+                ProductDescription = savedProduct.ProductDescription,
+                ProductPrice = savedProduct.ProductPrice,
+                ProductIsOnStock = savedProduct.ProductIsOnStock
+            };
+
+            return response;
+
+        }
+    }
+}
