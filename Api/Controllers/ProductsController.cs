@@ -26,7 +26,8 @@ namespace Mostra.Api.Controllers
         {
             var result = await _mediator.Send(request);
 
-            return Ok(result);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+
         }
 
         [HttpGet]

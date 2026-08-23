@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mostra.Application.Interfaces;
-using Mostra.Infraestructure.Persistence;
 using Mostra.Domain.Entities;
+using Mostra.Infrastructure.Persistence;
 
 namespace Mostra.Infraestructure.Repository
 {
@@ -23,23 +23,24 @@ namespace Mostra.Infraestructure.Repository
         public async Task<List<Product>> GetAllAsync(CancellationToken cancellationToken = default)
         {
 
-            return await _context.Products.Where(p => !p.IsDeleted).ToListAsync(cancellationToken);
+            return await _context.Products.ToListAsync(cancellationToken);
         }
 
         public async Task<Product> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Product> UpdateProductAsync(Product product, CancellationToken cancellationToken = default)
         {
+            _context.Products.Update(product);
             await _context.SaveChangesAsync(cancellationToken);
             return product;
         }
 
         public async Task DeleteProductAsync(Product product, CancellationToken cancellationToken)
         {
-            product.IsDeleted = true;
+            product.MarkAsDeleted();
             await _context.SaveChangesAsync(cancellationToken);
             
         }

@@ -1,8 +1,11 @@
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Mostra.Application.Common.Behaviors;
 using Mostra.Application.Interfaces;
 using Mostra.Application.Products.CreateProduct;
-using Mostra.Infraestructure.Persistence;
 using Mostra.Infraestructure.Repository;
+using Mostra.Infrastructure.Persistence;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 
@@ -31,6 +34,9 @@ builder.Services.AddDbContext<MostraContext>(options =>
 // MediatR: escanea el assembly de Application y registra TODOS los handlers automáticamente
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<CreateProductRequestDto>());
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 var app = builder.Build();
 
