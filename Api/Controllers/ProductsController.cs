@@ -4,6 +4,7 @@ using Mostra.Application.Products.CreateProduct;
 using Mostra.Application.Products.DeleteProduct;
 using Mostra.Application.Products.GetProduct;
 using Mostra.Application.Products.GetProductById;
+using Mostra.Application.Products.GetProductsByBusiness;
 using Mostra.Application.Products.UpdateProduct;
 
 namespace Mostra.Api.Controllers
@@ -61,6 +62,14 @@ namespace Mostra.Api.Controllers
             await _mediator.Send(request, cancellationToken);
 
             return NoContent();
+        }
+
+        [HttpGet("business/{businessId:int}")]
+        public async Task<IActionResult> GetAllByBusiness(int businessId, CancellationToken cancellationToken)
+        {
+            var request = new GetProductsByBusinessRequestDto { BusinessId = businessId };
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
         }
     }
 }

@@ -33,7 +33,6 @@ namespace Mostra.Infraestructure.Repository
 
         public async Task<Product> UpdateProductAsync(Product product, CancellationToken cancellationToken = default)
         {
-            _context.Products.Update(product);
             await _context.SaveChangesAsync(cancellationToken);
             return product;
         }
@@ -42,7 +41,16 @@ namespace Mostra.Infraestructure.Repository
         {
             product.MarkAsDeleted();
             await _context.SaveChangesAsync(cancellationToken);
+
             
+        }
+
+        public async Task<List<Product>> GetAllByBusinessIdAsync(int businessId, CancellationToken cancellationToken = default)
+        {
+            
+            return await _context.Products
+                .Where(p => p.BussinesId == businessId)
+                .ToListAsync(cancellationToken);
         }
 
 

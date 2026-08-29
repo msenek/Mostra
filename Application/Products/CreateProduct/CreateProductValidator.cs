@@ -18,9 +18,15 @@ namespace Mostra.Application.Products.CreateProduct
 
 
             RuleFor(x => x.ProductPrice)
-                .Null().WithMessage("The product price can't be empty.")
-                .GreaterThan(0).WithMessage("The product price mustb be greater than 0.");
-            
+                .GreaterThan(0).WithMessage("The price length must be greater than 0.");
+
+            RuleFor(x => x.BusinessId)
+                .GreaterThan(0).WithMessage("You must specify a valid business.");
+
+            RuleFor(x => x.CategoryId)
+                .GreaterThan(0).WithMessage("You must specify a category.");
+
+
 
         }
     }

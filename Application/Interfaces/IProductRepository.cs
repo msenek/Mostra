@@ -13,6 +13,8 @@ namespace Mostra.Application.Interfaces
         public Task<Product> UpdateProductAsync(Product product, CancellationToken cancellationToken = default);
 
         public Task DeleteProductAsync(Product product, CancellationToken cancellationToken = default);
+
+        Task<List<Product>> GetAllByBusinessIdAsync(int businessId, CancellationToken cancellationToken = default);
     }
     
 }

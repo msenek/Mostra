@@ -21,7 +21,9 @@ namespace Mostra.Application.Products.CreateProduct
                 ProductName = requestDto.ProductName,
                 ProductDescription = requestDto.ProductDescription,
                 ProductPrice = requestDto.ProductPrice,
-                ProductIsOnStock = requestDto.ProductIsOnStock
+                ProductIsOnStock = requestDto.ProductIsOnStock,
+                BussinesId = requestDto.BusinessId,
+                CategoryId = requestDto.CategoryId
             };
 
             var savedProduct = await _repository.CreateProductAsync(product, cancellationToken);
@@ -33,7 +35,9 @@ namespace Mostra.Application.Products.CreateProduct
                 ProductName = savedProduct.ProductName,
                 ProductDescription = savedProduct.ProductDescription,
                 ProductPrice = savedProduct.ProductPrice,
-                ProductIsOnStock = savedProduct.ProductIsOnStock
+                ProductIsOnStock = savedProduct.ProductIsOnStock,
+                BusinessId = requestDto.BusinessId,
+                CategoryId = requestDto.CategoryId
             };
 
             return response;

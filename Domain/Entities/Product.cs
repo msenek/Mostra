@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace Mostra.Domain.Entities
 {
     public class Product
@@ -11,9 +10,16 @@ namespace Mostra.Domain.Entities
         public bool ProductIsOnStock { get; set; }
         public bool IsDeleted { get; set; }
 
+        public int? BussinesId { get; set; }
+        public Business? Business { get; set; }
+
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; } = null!;
         public void MarkAsDeleted()
         {
             IsDeleted = true;
         }
+
+
     }
 }

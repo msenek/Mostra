@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0320: Hacer que la función anónima sea estática
+dotnet_diagnostic.IDE0320.severity = silent

@@ -7,6 +7,8 @@ namespace Mostra.Infrastructure.Persistence
     public class MostraContext : DbContext   
     {
         public DbSet<Product> Products { get; set; }
+        public DbSet<Business> Businesses { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public MostraContext(DbContextOptions<MostraContext> options) : base(options)
         {
         }
