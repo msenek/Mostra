@@ -8,7 +8,7 @@ using Mostra.Application.Bussines.CreateBussines;
 namespace Mostra.Api.Controllers
 {
     [ApiController]
-    [Route("api/businesses")]
+    [Route("api/businesses")] 
     public class BusinessesController : ControllerBase
     {
         private readonly IMediator _mediator;
