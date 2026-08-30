@@ -13,12 +13,10 @@ namespace Mostra.Api.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ICategoryRepository _repository;
 
         public CategoriesController(IMediator mediator, ICategoryRepository repository)
         {
             _mediator = mediator;
-            _repository = repository;
         }
 
         [HttpPost]

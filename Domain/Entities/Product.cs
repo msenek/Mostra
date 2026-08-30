@@ -10,7 +10,7 @@ namespace Mostra.Domain.Entities
         public bool ProductIsOnStock { get; set; }
         public bool IsDeleted { get; set; }
 
-        public int? BussinesId { get; set; }
+        public int? BusinessId { get; set; }
         public Business? Business { get; set; }
 
         public int? CategoryId { get; set; }

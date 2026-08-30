@@ -22,7 +22,7 @@ namespace Mostra.Application.Products.CreateProduct
                 ProductDescription = requestDto.ProductDescription,
                 ProductPrice = requestDto.ProductPrice,
                 ProductIsOnStock = requestDto.ProductIsOnStock,
-                BussinesId = requestDto.BusinessId,
+                BusinessId = requestDto.BusinessId,
                 CategoryId = requestDto.CategoryId
             };
 

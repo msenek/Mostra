@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Mostra.Application.Common.Behaviors;
 using Mostra.Application.Interfaces;
 using Mostra.Application.Products.CreateProduct;
-using Mostra.Infraestructure.Repository;
+using Mostra.Infrastructure.Repository;
 using Mostra.Infrastructure.Persistence;
 using Mostra.Infrastructure.Repository;
 using NSwag;

@@ -3,7 +3,7 @@ using Mostra.Application.Interfaces;
 using Mostra.Domain.Entities;
 using Mostra.Infrastructure.Persistence;
 
-namespace Mostra.Infraestructure.Repository
+namespace Mostra.Infrastructure.Repository
 {
     public class ProductRepository : IProductRepository
     {
@@ -49,7 +49,7 @@ namespace Mostra.Infraestructure.Repository
         {
             
             return await _context.Products
-                .Where(p => p.BussinesId == businessId)
+                .Where(p => p.BusinessId == businessId)
                 .ToListAsync(cancellationToken);
         }
 

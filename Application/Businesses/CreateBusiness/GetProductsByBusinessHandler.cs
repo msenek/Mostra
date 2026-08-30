@@ -25,7 +25,7 @@ namespace Mostra.Application.Products.GetProductsByBusiness
                 ProductDescription = p.ProductDescription,
                 ProductPrice = p.ProductPrice,
                 ProductIsOnStock = p.ProductIsOnStock,
-                BusinessId = (int)p.BussinesId,
+                BusinessId = (int)p.BusinessId,
                 CategoryId = (int)p.CategoryId
             }).ToList();
         }
