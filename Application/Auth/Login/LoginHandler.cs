@@ -41,7 +41,7 @@ namespace Mostra.Application.Auth.Login
 
         private string GenerateJwtToken(Merchant merchant)
         {
-            var secret = _configuration["Jwt:Secret"] ?? "50886510MT808232104201113082010X";
+            var secret = _configuration["Jwt:Secret"];
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

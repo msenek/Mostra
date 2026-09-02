@@ -3,16 +3,19 @@ using Mostra.Application.Bussines.CreateBussines;
 using Mostra.Application.Interfaces;
 using Mostra.Domain.Entities;
 using System.Text.RegularExpressions;
+using Mostra.Api.Services;
 
 namespace Mostra.Application.Businesses.CreateBusiness
 {
     public class CreateBusinessHandler : IRequestHandler<CreateBusinessRequestDto, CreateBusinessResponseDto>
     {
         private readonly IBusinessRepository _businessRepository;
+        private readonly ICurrentUserService _currentUser;
 
-        public CreateBusinessHandler(IBusinessRepository businessRepository)
+        public CreateBusinessHandler(IBusinessRepository businessRepository, ICurrentUserService currentUser)
         {
             _businessRepository = businessRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<CreateBusinessResponseDto> Handle(CreateBusinessRequestDto request, CancellationToken cancellationToken)
@@ -23,7 +26,8 @@ namespace Mostra.Application.Businesses.CreateBusiness
                 Name = request.Name,
                 Description = request.Description,
                 LogoUrl = request.LogoUrl,
-                UniqueSlug = slug
+                UniqueSlug = slug,
+                MerchantId = _currentUser.MerchantId
             };
             var savedBusiness = await _businessRepository.CreateAsync(business, cancellationToken);
 

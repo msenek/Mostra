@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Mostra.Api.Middlewares;
+using Mostra.Api.Services;
 using Mostra.Application.Common.Behaviors;
 using Mostra.Application.Interfaces;
 using Mostra.Application.Products.CreateProduct;
@@ -18,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "50886510MT808232104201113082010X";
+var jwtSecret = builder.Configuration["Jwt:Secret"];
 var key = Encoding.ASCII.GetBytes(jwtSecret);
 
 builder.Services.AddAuthentication(x =>
@@ -56,7 +58,8 @@ builder.Services.AddOpenApiDocument(config =>
     config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 
-
+builder.Services.AddHttpContextAccessor();                              
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();  
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -101,7 +104,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
+
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseAuthentication();   
+app.UseAuthorization();
 app.UseAuthorization();
 app.MapControllers();
 
