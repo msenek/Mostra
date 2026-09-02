@@ -11,6 +11,8 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
+        public int MerchantId { get; set; }
+        public Merchant Merchant { get; set; } = null!;
         public void MarkAsDeleted()
         {
             IsDeleted = true;

@@ -9,6 +9,8 @@ namespace Mostra.Infrastructure.Persistence
         public DbSet<Product> Products { get; set; }
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Merchant> Merchants { get; set; }
+
         public MostraContext(DbContextOptions<MostraContext> options) : base(options)
         {
         }
@@ -17,6 +19,7 @@ namespace Mostra.Infrastructure.Persistence
         { 
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
             modelBuilder.Entity<Business>().HasQueryFilter(b => !b.IsDeleted);
+            modelBuilder.Entity<Merchant>().HasQueryFilter(m => !m.IsDeleted);
             modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
         }
     }

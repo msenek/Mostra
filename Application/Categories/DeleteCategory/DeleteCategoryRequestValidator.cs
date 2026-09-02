@@ -6,7 +6,8 @@ namespace Mostra.Application.Categories.DeleteCategory
     {
         public DeleteCategoryRequestValidator()
         {
-            RuleFor(x => x.Id).GreaterThan(0).WithMessage("The category id is invalid.");
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("The category ID is invalid.");
         }
     }
 }

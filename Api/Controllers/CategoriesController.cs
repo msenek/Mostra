@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mostra.Application.Categories.CreateCategory;
 using Mostra.Application.Categories.DeleteCategory;
@@ -18,14 +19,14 @@ namespace Mostra.Api.Controllers
         {
             _mediator = mediator;
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryRequestDto request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Created("", result);
         }
-
+        [Authorize]
         [HttpGet("business/{businessId}")]
         public async Task<IActionResult> GetAllByBusiness(int businessId, CancellationToken cancellationToken)
         {
@@ -33,7 +34,7 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [Authorize]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateCategoryRequestDto request, CancellationToken cancellationToken)
         {
@@ -41,7 +42,7 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [Authorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mostra.Migrations
 {
     [DbContext(typeof(MostraContext))]
-    [Migration("20260827044000_AddCategoryEntity")]
-    partial class AddCategoryEntity
+    [Migration("20260902050004_InitialCleanSetup")]
+    partial class InitialCleanSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,9 @@ namespace Mostra.Migrations
                     b.Property<string>("LogoUrl")
                         .HasColumnType("text");
 
+                    b.Property<int>("MerchantId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -54,6 +57,8 @@ namespace Mostra.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MerchantId");
 
                     b.ToTable("Businesses");
                 });
@@ -86,6 +91,37 @@ namespace Mostra.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Mostra.Domain.Entities.Merchant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Merchants");
+                });
+
             modelBuilder.Entity("Mostra.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -95,9 +131,6 @@ namespace Mostra.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("BusinessId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("BussinesId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("CategoryId")
@@ -125,6 +158,17 @@ namespace Mostra.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Mostra.Domain.Entities.Business", b =>
+                {
+                    b.HasOne("Mostra.Domain.Entities.Merchant", "Merchant")
+                        .WithMany("Businesses")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Merchant");
                 });
 
             modelBuilder.Entity("Mostra.Domain.Entities.Category", b =>
@@ -163,6 +207,11 @@ namespace Mostra.Migrations
             modelBuilder.Entity("Mostra.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Mostra.Domain.Entities.Merchant", b =>
+                {
+                    b.Navigation("Businesses");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,7 +6,8 @@ namespace Mostra.Application.Businesses.DeleteBusiness
     {
         public DeleteBusinessRequestValidator()
         {
-            RuleFor(x => x.Id).GreaterThan(0).WithMessage("The business id is invalid.");
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("The business ID is invalid.");
         }
     }
 }

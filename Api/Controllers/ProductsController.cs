@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mostra.Application.Products.CreateProduct;
 using Mostra.Application.Products.DeleteProduct;
@@ -21,7 +22,7 @@ namespace Mostra.Api.Controllers
             _mediator = mediator;
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductRequestDto request)
         {
@@ -30,14 +31,14 @@ namespace Mostra.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
 
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new ListProductsRequestDto(), cancellationToken);
             return Ok(result);
         }
-
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
@@ -46,7 +47,7 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [Authorize]
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateProductRequestDto requestDto, CancellationToken cancellationToken)
         {
@@ -54,7 +55,7 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(requestDto, cancellationToken);
             return Ok(result);
         }
-
+        [Authorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
@@ -63,7 +64,7 @@ namespace Mostra.Api.Controllers
 
             return NoContent();
         }
-
+        [Authorize]
         [HttpGet("business/{businessId:int}")]
         public async Task<IActionResult> GetAllByBusiness(int businessId, CancellationToken cancellationToken)
         {

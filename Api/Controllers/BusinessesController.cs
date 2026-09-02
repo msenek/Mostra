@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mostra.Application.Businesses.DeleteBusiness;
 using Mostra.Application.Businesses.GetAllBusinesses;
@@ -17,6 +19,7 @@ namespace Mostra.Api.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateBusinessRequestDto request, CancellationToken cancellationToken)
         {
@@ -24,7 +27,7 @@ namespace Mostra.Api.Controllers
 
             return Created("", result);
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -32,7 +35,7 @@ namespace Mostra.Api.Controllers
             return Ok(result);
         }
 
-
+        [Authorize]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateBusinessRequestDto request, CancellationToken cancellationToken)
         {
@@ -40,7 +43,7 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [Authorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
