@@ -9,5 +9,6 @@ namespace Mostra.Application.Interfaces
         Task<Business?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
         Task<Business> UpdateAsync(Business business, CancellationToken cancellationToken = default);
         Task DeleteAsync(Business business, CancellationToken cancellationToken = default);
+        Task<Business?> GetBySlugWithCatalogAsync(string slug, CancellationToken cancellationToken = default);
     }
 }

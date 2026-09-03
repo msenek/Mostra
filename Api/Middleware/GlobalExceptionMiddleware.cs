@@ -8,10 +8,12 @@ namespace Mostra.Api.Middlewares
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public GlobalExceptionMiddleware(RequestDelegate next)
+        private readonly ILogger<GlobalExceptionMiddleware> _logger;  
+        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
+
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -22,6 +24,8 @@ namespace Mostra.Api.Middlewares
             }
             catch (ValidationException ex)
             {
+                _logger.LogWarning(ex, "Error de validación en {Path}", context.Request.Path); 
+
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Response.ContentType = "application/json";
 
@@ -32,6 +36,7 @@ namespace Mostra.Api.Middlewares
             }
             catch (DomainException ex)
             {
+                _logger.LogWarning(ex, "Excepción de dominio en {Path}: {Message}", context.Request.Path, ex.Message);
                 context.Response.StatusCode = ex.StatusCode;
                 context.Response.ContentType = "application/json";
 
@@ -41,6 +46,7 @@ namespace Mostra.Api.Middlewares
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error interno no controlado en {Path}", context.Request.Path);
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
 

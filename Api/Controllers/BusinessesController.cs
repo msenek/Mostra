@@ -1,11 +1,12 @@
 ﻿using MediatR;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mostra.Application.Businesses.DeleteBusiness;
 using Mostra.Application.Businesses.GetAllBusinesses;
+using Mostra.Application.Businesses.GetBusinessQrCode;
 using Mostra.Application.Businesses.UpdateBusiness;
 using Mostra.Application.Bussines.CreateBussines;
+using System.Security.Claims;
 
 namespace Mostra.Api.Controllers
 {
@@ -48,7 +49,15 @@ namespace Mostra.Api.Controllers
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeleteBusinessRequestDto { Id = id }, cancellationToken);
-            return NoContent(); 
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpGet("{id:int}/qrcode")]
+        public async Task<IActionResult> GetQrCode(int id, CancellationToken cancellationToken)
+        {
+            var pngBytes = await _mediator.Send(new GetBusinessQrCodeRequestDto { BusinessId = id }, cancellationToken);
+            return File(pngBytes, "image/png");
         }
     }
 }

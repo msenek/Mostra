@@ -11,6 +11,7 @@ using Mostra.Application.Products.CreateProduct;
 using Mostra.Infrastructure.Persistence;
 using Mostra.Infrastructure.Repository;
 using Mostra.Infrastructure.Repository;
+using Mostra.Infrastructure.Services;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Text;
@@ -64,6 +65,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
+builder.Services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
 
 builder.Services.AddDbContext<MostraContext>(options =>
 {

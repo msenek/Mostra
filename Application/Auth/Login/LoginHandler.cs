@@ -24,8 +24,11 @@ namespace Mostra.Application.Auth.Login
         public async Task<LoginResponseDto> Handle(LoginRequestDto request, CancellationToken cancellationToken)
         {
             var merchant = await _repository.GetByEmailAsync(request.Email, cancellationToken);
-            if (merchant == null || !BCrypt.Net.BCrypt.Verify(request.Password, merchant.PasswordHash))
-                throw new Exception("Invalid credential.");
+            if (merchant == null)
+                throw new UnauthorizedException("Invalid credential."); 
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, merchant.PasswordHash))
+                throw new UnauthorizedException("Invalid credential.");
 
 
             var token = GenerateJwtToken(merchant);
