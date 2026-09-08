@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
+using Mostra.Application.Interfaces;
 
 namespace Mostra.Application.Products.CreateProduct
 {
-    public class CreateProductRequestDto : IRequest<CreateProductResponseDto>
+    public class CreateProductRequestDto : IRequest<CreateProductResponseDto>, IBusinessOwnedRequest
     {
 
         public string? ProductName { get; set; }

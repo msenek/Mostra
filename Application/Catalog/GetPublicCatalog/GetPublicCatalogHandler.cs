@@ -17,9 +17,9 @@ namespace Mostra.Application.Catalog.GetPublicCatalog
         public async Task<GetPublicCatalogResponseDto> Handle(GetPublicCatalogRequestDto request, CancellationToken cancellationToken)
         {
             var business = await _repository.GetBySlugWithCatalogAsync(request.Slug, cancellationToken)
-                ?? throw new NotFoundException("Catálogo no encontrado.");
+                ?? throw new NotFoundException("Catalog not found");
 
-            var categorias = business.Categories
+            var category = business.Categories
                 .Select(c => new PublicCategoryDto
                 {
                     Name = c.Name,
@@ -30,15 +30,15 @@ namespace Mostra.Application.Catalog.GetPublicCatalog
                 })
                 .ToList();
 
-            // p sin cat asig CategoryId == null van en un grupo apart.
-            var sinCategoria = business.Products
+            // product sin category asig CategoryId == null van en un grupo apart.
+            var withoutCategory = business.Products
                 .Where(p => p.CategoryId == null)
                 .Select(MapProduct)
                 .ToList();
 
-            if (sinCategoria.Count > 0)
+            if (withoutCategory.Count > 0)
             {
-                categorias.Add(new PublicCategoryDto { Name = "Otros", Products = sinCategoria });
+                category.Add(new PublicCategoryDto { Name = "Otros", Products = withoutCategory });
             }
 
             return new GetPublicCatalogResponseDto
@@ -46,7 +46,7 @@ namespace Mostra.Application.Catalog.GetPublicCatalog
                 BusinessName = business.Name,
                 Description = business.Description,
                 LogoUrl = business.LogoUrl,
-                Categories = categorias
+                Categories = category
             };
         }
 

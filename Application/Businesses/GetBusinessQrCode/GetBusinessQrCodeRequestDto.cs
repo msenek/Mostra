@@ -1,9 +1,9 @@
-﻿// Application/Businesses/GetBusinessQrCode/GetBusinessQrCodeRequestDto.cs
-using MediatR;
+﻿using MediatR;
+using Mostra.Application.Interfaces;
 
 namespace Mostra.Application.Businesses.GetBusinessQrCode
 {
-    public class GetBusinessQrCodeRequestDto : IRequest<byte[]>
+    public class GetBusinessQrCodeRequestDto : IRequest<byte[]>, IBusinessOwnedRequest
     {
         public int BusinessId { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Mostra.Application.Exceptions;
 using Mostra.Application.Interfaces;
 using Mostra.Domain.Entities;
 
@@ -8,14 +9,28 @@ namespace Mostra.Application.Products.CreateProduct
     public class CreateProductHandler : IRequestHandler<CreateProductRequestDto, CreateProductResponseDto>
     {
         private readonly IProductRepository _repository;
-
-        public CreateProductHandler(IProductRepository repository)
+        private readonly ICategoryRepository _categoryRepository;
+        public CreateProductHandler(IProductRepository repository, ICategoryRepository categoryRepository)
         {
+            _categoryRepository = categoryRepository;
             _repository = repository;
         }
 
         public async Task<CreateProductResponseDto> Handle(CreateProductRequestDto requestDto, CancellationToken cancellationToken)
         {
+
+            var category = await _categoryRepository.GetByIdAsync(requestDto.CategoryId);
+
+            if (category == null)
+            {
+                throw new NotFoundException("La categoría indicada no existe.");
+            }
+
+            if (category.BusinessId != requestDto.BusinessId)
+            {
+                throw new ForbiddenException("the category doesn't belong to this business");
+            }
+            
             var product = new Product()
             {
                 ProductName = requestDto.ProductName,

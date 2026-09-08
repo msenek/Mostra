@@ -38,6 +38,7 @@ namespace Mostra.Application.Common.Behaviors
                 throw new ValidationException(failures);
             }
             return await next();
+            
         }
     }
 }
