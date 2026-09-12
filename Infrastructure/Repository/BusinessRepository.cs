@@ -20,9 +20,9 @@ namespace Mostra.Infrastructure.Repository
             return business;
         }
 
-        public async Task<List<Business>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<List<Business>> GetAllAsync(int merchantId, CancellationToken cancellationToken = default)
         {
-            return await _context.Businesses.ToListAsync<Business>(cancellationToken);
+            return await _context.Businesses.Where(b => b.MerchantId == merchantId).ToListAsync();
         }
 
         public async Task<Business?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -41,8 +41,6 @@ namespace Mostra.Infrastructure.Repository
             business.MarkAsDeleted();
             await _context.SaveChangesAsync(cancellationToken);
         }
-
-        // Application/Interfaces/IBusinessRepository.cs — agregar
         public async Task<Business?> GetBySlugWithCatalogAsync(string slug, CancellationToken cancellationToken = default)
         {
             return await _context.Businesses

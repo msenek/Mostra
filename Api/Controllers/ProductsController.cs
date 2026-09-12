@@ -7,6 +7,7 @@ using Mostra.Application.Products.GetProduct;
 using Mostra.Application.Products.GetProductById;
 using Mostra.Application.Products.GetProductsByBusiness;
 using Mostra.Application.Products.UpdateProduct;
+using Mostra.Application.Products.UpdateProductIsActive;
 
 namespace Mostra.Api.Controllers
 
@@ -55,6 +56,16 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(requestDto, cancellationToken);
             return Ok(result);
         }
+
+        [Authorize]
+        [HttpPut("{Id:int}")]
+        public async Task<IActionResult> UpdateIsActive(int Id, UpdateProductIsActiveRequestDto requestDto, CancellationToken cancellationToken)
+        {
+            requestDto.Id = Id;
+            var result = await _mediator.Send(requestDto, cancellationToken);
+            return Ok(result);
+        }
+
         [Authorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)

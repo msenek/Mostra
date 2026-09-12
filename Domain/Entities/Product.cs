@@ -9,6 +9,7 @@ namespace Mostra.Domain.Entities
         public decimal ProductPrice { get; set; }
         public bool ProductIsOnStock { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }
 
         public int BusinessId { get; set; }
         public Business? Business { get; set; }

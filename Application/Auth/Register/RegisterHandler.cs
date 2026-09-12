@@ -2,6 +2,7 @@
 using Mostra.Application.Interfaces;
 using Mostra.Domain.Entities;
 using BCrypt.Net;
+using Mostra.Application.Exceptions;
 
 namespace Mostra.Application.Auth.Register
 {
@@ -15,7 +16,7 @@ namespace Mostra.Application.Auth.Register
         {
             var existing = await _repository.GetByEmailAsync(request.Email, cancellationToken);
             if (existing != null)
-                throw new Exception("The email already exists");
+                throw new ConflictException("The email already exists");
 
             var merchant = new Merchant
             {

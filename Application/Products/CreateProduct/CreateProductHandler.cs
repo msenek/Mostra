@@ -30,7 +30,7 @@ namespace Mostra.Application.Products.CreateProduct
             {
                 throw new ForbiddenException("the category doesn't belong to this business");
             }
-            
+
             var product = new Product()
             {
                 ProductName = requestDto.ProductName,
@@ -38,7 +38,8 @@ namespace Mostra.Application.Products.CreateProduct
                 ProductPrice = requestDto.ProductPrice,
                 ProductIsOnStock = requestDto.ProductIsOnStock,
                 BusinessId = requestDto.BusinessId,
-                CategoryId = requestDto.CategoryId
+                CategoryId = requestDto.CategoryId,
+                IsActive = true
             };
 
             var savedProduct = await _repository.CreateProductAsync(product, cancellationToken);

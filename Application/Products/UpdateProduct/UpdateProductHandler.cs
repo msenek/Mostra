@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Mostra.Application.Exceptions;
 using Mostra.Application.Interfaces;
 
 namespace Mostra.Application.Products.UpdateProduct
@@ -14,7 +15,7 @@ namespace Mostra.Application.Products.UpdateProduct
             var product = await _repository.GetByIdAsync(requestDto.Id, cancellationToken);
 
             if (product == null)
-                throw new KeyNotFoundException($"Producto con ID {requestDto.Id} no encontrado.");
+                throw new NotFoundException($"Product with ID {requestDto.Id} not found.");
 
             if (requestDto.ProductName != null)
                 product.ProductName = requestDto.ProductName;
@@ -28,6 +29,9 @@ namespace Mostra.Application.Products.UpdateProduct
             if (requestDto.ProductIsOnStock.HasValue)
                 product.ProductIsOnStock = requestDto.ProductIsOnStock.Value;
 
+            if (requestDto.IsActive.HasValue)
+                product.IsActive = requestDto.IsActive.Value;
+
 
             await _repository.UpdateProductAsync(product, cancellationToken);
 
@@ -37,7 +41,8 @@ namespace Mostra.Application.Products.UpdateProduct
                 ProductName = product.ProductName ?? string.Empty,
                 ProductDescription = product.ProductDescription ?? string.Empty,
                 ProductPrice = product.ProductPrice,
-                ProductIsOnStock = product.ProductIsOnStock
+                ProductIsOnStock = product.ProductIsOnStock,
+                IsActive = product.IsActive
             };
         }
     }

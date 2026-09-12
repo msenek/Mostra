@@ -12,5 +12,6 @@ namespace Mostra.Application.Products.UpdateProduct
         public decimal ProductPrice { get; set; }
         
         public bool ProductIsOnStock { get; set; }
+        public bool IsActive { get; internal set; }
     }
 }

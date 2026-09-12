@@ -18,7 +18,7 @@ namespace Mostra.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         { 
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
-            modelBuilder.Entity<Business>().HasQueryFilter(b => !b.IsDeleted);
+            modelBuilder.Entity<Business>().HasQueryFilter(b => !b.IsDeleted).HasIndex(b => b.UniqueSlug).IsUnique(); ;
             modelBuilder.Entity<Merchant>().HasQueryFilter(m => !m.IsDeleted);
             modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
         }
