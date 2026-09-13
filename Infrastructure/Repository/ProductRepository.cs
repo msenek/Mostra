@@ -26,8 +26,14 @@ namespace Mostra.Infrastructure.Repository
             return await _context.Products.ToListAsync(cancellationToken);
         }
 
-        public async Task<Product> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<Product> GetByIdAsync(int id, CancellationToken cancellationToken = default, bool includeDeleted = false)
         {
+            var query = _context.Products.AsQueryable();
+
+            if (includeDeleted)
+            {
+                query = query.IgnoreQueryFilters();
+            }
             return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 

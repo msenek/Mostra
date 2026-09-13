@@ -44,10 +44,10 @@ namespace Mostra.Infrastructure.Repository
         public async Task<Business?> GetBySlugWithCatalogAsync(string slug, CancellationToken cancellationToken = default)
         {
             return await _context.Businesses
-       .Include(b => b.Categories)
-       .Include(b => b.Products)
-       .AsSplitQuery()
-       .FirstOrDefaultAsync(b => b.UniqueSlug == slug, cancellationToken);
+        .Include(b => b.Categories)
+        .Include(b => b.Products.Where(p => p.IsActive))
+        .AsSplitQuery()
+        .FirstOrDefaultAsync(b => b.UniqueSlug == slug, cancellationToken);
         }
     }
 }

@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mostra.Api.Middlewares;
@@ -10,14 +11,13 @@ using Mostra.Application.Interfaces;
 using Mostra.Application.Products.CreateProduct;
 using Mostra.Infrastructure.Persistence;
 using Mostra.Infrastructure.Repository;
-using Mostra.Infrastructure.Repository;
 using Mostra.Infrastructure.Services;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers();
 
@@ -43,6 +43,39 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MostraQrClients", policy =>
+    {
+        // por ahora abierto,cuando front tenga dominimo replazar por whitorigins y sacar allowany hea y meth
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    //clientes que escanean el qr y consultan el catálogo público sin auth
+    options.AddFixedWindowLimiter("qr-reader", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 20;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueLimit = 0;
+    });
+
+    //comerciantes autenticados administrando su catálogo
+    options.AddFixedWindowLimiter("merchant", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 100;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueLimit = 0;
+    });
+});
+
 builder.Services.AddOpenApiDocument(config =>
 {
     config.Title = "Mostra API";
@@ -59,13 +92,15 @@ builder.Services.AddOpenApiDocument(config =>
     config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 
-builder.Services.AddHttpContextAccessor();                              
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();  
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 builder.Services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
+builder.Services.AddScoped<IImageStorageService, CloudinaryImageStorageService>();
+builder.Services.AddHostedService<HardDeleteExpiredEntitiesJob>();
 
 builder.Services.AddDbContext<MostraContext>(options =>
 {
@@ -88,11 +123,11 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<MostraContext>();
         context.Database.Migrate();
-        Console.WriteLine(" Migraciones aplicadas correctamente.");
+        Console.WriteLine("Migraciones aplicadas correctamente.");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($" Error al aplicar migraciones: {ex.Message}");
+        Console.WriteLine($"Error al aplicar migraciones: {ex.Message}");
     }
 }
 
@@ -107,14 +142,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
-
 app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
-app.UseAuthentication();   
+app.UseCors("MostraQrClients");
+app.UseAuthentication();
 app.UseAuthorization();
-app.UseAuthorization();
+app.UseRateLimiter();
 app.MapControllers();
 
 app.Run();

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Mostra.Application.Catalog.GetPublicCatalog;
 
 namespace Mostra.Api.Controllers
@@ -11,6 +12,7 @@ namespace Mostra.Api.Controllers
         private readonly IMediator _mediator;
         public CatalogController(IMediator mediator) => _mediator = mediator;
 
+        [EnableRateLimiting("qr-reader")]
         [HttpGet("{slug}")] 
         public async Task<IActionResult> GetBySlug(string slug, CancellationToken cancellationToken)
         {

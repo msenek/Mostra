@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Mostra.Application.Categories.CreateCategory;
 using Mostra.Application.Categories.DeleteCategory;
 using Mostra.Application.Categories.GetCategoriesByBusiness;
@@ -19,6 +20,8 @@ namespace Mostra.Api.Controllers
         {
             _mediator = mediator;
         }
+
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryRequestDto request, CancellationToken cancellationToken)
@@ -26,6 +29,8 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Created("", result);
         }
+
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpGet("business/{businessId}")]
         public async Task<IActionResult> GetAllByBusiness(int businessId, CancellationToken cancellationToken)
@@ -34,6 +39,8 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
+
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateCategoryRequestDto request, CancellationToken cancellationToken)
@@ -42,6 +49,8 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
+
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)

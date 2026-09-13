@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Mostra.Application.Businesses.DeleteBusiness;
 using Mostra.Application.Businesses.GetAllBusinesses;
 using Mostra.Application.Businesses.GetBusinessQrCode;
@@ -19,7 +20,7 @@ namespace Mostra.Api.Controllers
         {
             _mediator = mediator;
         }
-
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateBusinessRequestDto request, CancellationToken cancellationToken)
@@ -28,6 +29,7 @@ namespace Mostra.Api.Controllers
 
             return Created("", result);
         }
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -36,6 +38,7 @@ namespace Mostra.Api.Controllers
             return Ok(result);
         }
 
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateBusinessRequestDto request, CancellationToken cancellationToken)
@@ -44,6 +47,8 @@ namespace Mostra.Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
+
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
@@ -52,6 +57,7 @@ namespace Mostra.Api.Controllers
             return NoContent();
         }
 
+        [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpGet("{id:int}/qrcode")]
         public async Task<IActionResult> GetQrCode(int id, CancellationToken cancellationToken)
