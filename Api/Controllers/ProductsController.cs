@@ -4,14 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Mostra.Application.Products.CreateProduct;
 using Mostra.Application.Products.DeleteProduct;
+using Mostra.Application.Products.DeleteProductImage;
 using Mostra.Application.Products.GetProduct;
 using Mostra.Application.Products.GetProductById;
 using Mostra.Application.Products.GetProductsByBusiness;
+using Mostra.Application.Products.RestoreProduct;
 using Mostra.Application.Products.UpdateProduct;
+using Mostra.Application.Products.UpdateProductImage;
 using Mostra.Application.Products.UpdateProductIsActive;
 
 namespace Mostra.Api.Controllers
-
 {
     [ApiController]
     [Route("api/products")]
@@ -30,9 +32,7 @@ namespace Mostra.Api.Controllers
         public async Task<IActionResult> Create(CreateProductRequestDto request)
         {
             var result = await _mediator.Send(request);
-
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-
         }
 
         [EnableRateLimiting("merchant")]
@@ -50,10 +50,10 @@ namespace Mostra.Api.Controllers
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
             var request = new GetProductRequestDto { Id = id };
-
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
+
         [EnableRateLimiting("merchant")]
         [Authorize]
         [HttpPatch("{id:int}")]
@@ -81,7 +81,6 @@ namespace Mostra.Api.Controllers
         {
             var request = new DeleteProductRequestDto { Id = id };
             await _mediator.Send(request, cancellationToken);
-
             return NoContent();
         }
 
@@ -101,6 +100,36 @@ namespace Mostra.Api.Controllers
         public async Task<IActionResult> UploadImage(int id, IFormFile file, CancellationToken cancellationToken)
         {
             var request = new UploadProductImageRequestDto { Id = id, File = file };
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [EnableRateLimiting("merchant")]
+        [Authorize]
+        [HttpPut("{id:int}/image")]
+        public async Task<IActionResult> UpdateImage(int id, IFormFile file, CancellationToken cancellationToken)
+        {
+            var request = new UpdateProductImageRequestDto { Id = id, File = file };
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [EnableRateLimiting("merchant")]
+        [Authorize]
+        [HttpDelete("{id:int}/image")]
+        public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
+        {
+            var request = new DeleteProductImageRequestDto { Id = id };
+            await _mediator.Send(request, cancellationToken);
+            return NoContent();
+        }
+
+        [EnableRateLimiting("merchant")]
+        [Authorize]
+        [HttpPut("{id:int}/restore")]
+        public async Task<IActionResult> Restore(int id, CancellationToken cancellationToken)
+        {
+            var request = new RestoreProductRequestDto { Id = id };
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }

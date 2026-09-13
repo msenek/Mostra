@@ -1,11 +1,9 @@
 ﻿using MediatR;
-using Mostra.Application.Interfaces;
 
 namespace Mostra.Application.Products.RestoreProduct
 {
-    public class RestoreProductRequestDto : IRequest<RestoreProductResponseDto>, IProductOwnedRequest
+    public class RestoreProductRequestDto : IRequest<RestoreProductResponseDto>
     {
         public int Id { get; set; }
-        public int ProductId => Id;
     }
 }
