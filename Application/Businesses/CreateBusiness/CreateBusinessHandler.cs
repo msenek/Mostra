@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Mostra.Application.Bussines.CreateBussines;
+using Mostra.Application.Business.CreateBussines;
 using Mostra.Application.Interfaces;
 using Mostra.Domain.Entities;
 using System.Text.RegularExpressions;
@@ -21,7 +21,7 @@ namespace Mostra.Application.Businesses.CreateBusiness
         public async Task<CreateBusinessResponseDto> Handle(CreateBusinessRequestDto request, CancellationToken cancellationToken)
         {
             var slug = GenerateSlug(request.Name);
-            var business = new Business
+            var business = new Domain.Entities.Business
             {
                 Name = request.Name,
                 Description = request.Description,

@@ -4,11 +4,11 @@ namespace Mostra.Application.Interfaces
 {
     public interface IBusinessRepository
     {
-        Task<Business> CreateAsync(Business business, CancellationToken cancellationToken = default);
-        Task<List<Business>> GetAllAsync(int merchantId, CancellationToken cancellationToken = default);
-        Task<Business?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<Business> UpdateAsync(Business business, CancellationToken cancellationToken = default);
-        Task DeleteAsync(Business business, CancellationToken cancellationToken = default);
-        Task<Business?> GetBySlugWithCatalogAsync(string slug, CancellationToken cancellationToken = default);
+        Task<Domain.Entities.Business> CreateAsync(Domain.Entities.Business business, CancellationToken cancellationToken = default);
+        Task<List<Domain.Entities.Business>> GetAllAsync(int merchantId, CancellationToken cancellationToken = default);
+        Task<Domain.Entities.Business?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<Domain.Entities.Business> UpdateAsync(Domain.Entities.Business business, CancellationToken cancellationToken = default);
+        Task DeleteAsync(Domain.Entities.Business business, CancellationToken cancellationToken = default);
+        Task<Domain.Entities.Business?> GetBySlugWithCatalogAsync(string slug, CancellationToken cancellationToken = default);
     }
 }

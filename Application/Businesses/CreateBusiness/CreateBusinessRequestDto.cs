@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Mostra.Application.Bussines.CreateBussines
+namespace Mostra.Application.Business.CreateBussines
 {
     public class CreateBusinessRequestDto : IRequest<CreateBusinessResponseDto>
     {

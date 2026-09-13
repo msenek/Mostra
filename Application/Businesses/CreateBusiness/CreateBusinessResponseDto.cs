@@ -1,4 +1,4 @@
-﻿namespace Mostra.Application.Bussines.CreateBussines
+﻿namespace Mostra.Application.Business.CreateBussines
 {
     public class CreateBusinessResponseDto
     {

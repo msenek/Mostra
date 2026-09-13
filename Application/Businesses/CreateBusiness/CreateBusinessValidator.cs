@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Mostra.Application.Bussines.CreateBussines
+namespace Mostra.Application.Business.CreateBussines
 {
     public class CreateBusinessValidator : AbstractValidator<CreateBusinessRequestDto>
     {

@@ -29,7 +29,7 @@ namespace Mostra.Application.Common.Behaviors
                 var business = await _businessRepository.GetByIdAsync(ownedRequest.BusinessId, cancellationToken);
                 if (business == null)
                 {
-                    throw new NotFoundException("Bussines id is invalid");
+                    throw new NotFoundException("Bussines not found");
                 }
 
                 if (business.MerchantId != merchantId)

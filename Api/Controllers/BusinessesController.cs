@@ -6,7 +6,7 @@ using Mostra.Application.Businesses.DeleteBusiness;
 using Mostra.Application.Businesses.GetAllBusinesses;
 using Mostra.Application.Businesses.GetBusinessQrCode;
 using Mostra.Application.Businesses.UpdateBusiness;
-using Mostra.Application.Bussines.CreateBussines;
+using Mostra.Application.Business.CreateBussines;
 using System.Security.Claims;
 
 namespace Mostra.Api.Controllers
