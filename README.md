@@ -44,4 +44,5 @@ Built with Clean Architecture principles (Domain / Application / Infrastructure 
 
 
 
-<img width="630" height="437" alt="image" src="https://github.com/user-attachments/assets/f6c358c2-36fc-4c92-bc45-6f0154fd4ffe" />
+<img width="806" height="487" alt="image" src="https://github.com/user-attachments/assets/1205b840-1a58-4066-9d66-9f71f1dcd4cb" />
+
