@@ -41,8 +41,52 @@ No account needed:
 ### Architecture
 
 Built with Clean Architecture principles (Domain / Application / Infrastructure / Api), using .NET, MediatR (CQRS-style handlers), PostgreSQL, and JWT-based authentication.
+## Getting Started
 
+### Prerequisites
 
+- [Docker](https://www.docker.com/products/docker-desktop/) and Docker Compose (bundled with Docker Desktop)
+
+That's it — you don't need .NET, PostgreSQL, or Redis installed locally. Everything runs in containers.
+
+### Running the project
+
+1. Clone the repository:
+```bash
+   git clone https://github.com/msenek/Mostra.git
+   cd Mostra
+```
+
+2. Create a `.env` file in the project root with the following variables:
+```
+   POSTGRES_USER=your_db_user
+   POSTGRES_PASSWORD=your_db_password
+   POSTGRES_DB=mostra_db
+   JWT_SECRET=your_jwt_secret
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   PUBLIC_CATALOG_BASE_URL=http://localhost:8080
+```
+   > Cloudinary credentials are free — sign up at [cloudinary.com](https://cloudinary.com) to get yours.
+
+3. Start everything (API + PostgreSQL + Redis):
+```bash
+   docker compose up -d
+```
+
+4. The API will be available at `http://localhost:8080`. Database migrations run automatically on startup — no manual setup needed.
+
+### Stopping the project
+
+```bash
+docker compose down
+```
+
+Data persists in a Docker volume, so your database survives restarts. To wipe everything (including data) and start fresh:
+
+```bash
+docker compose down -v
+```
 
 <img width="806" height="487" alt="image" src="https://github.com/user-attachments/assets/1205b840-1a58-4066-9d66-9f71f1dcd4cb" />
-
