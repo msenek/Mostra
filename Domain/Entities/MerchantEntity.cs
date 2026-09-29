@@ -18,6 +18,9 @@
 
         public ICollection<Business> Businesses { get; set; } = new List<Business>();
 
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
         public void MarkAsDeleted() => IsDeleted = true;
+
     }
 }

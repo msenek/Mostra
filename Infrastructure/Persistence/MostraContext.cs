@@ -10,6 +10,7 @@ namespace Mostra.Infrastructure.Persistence
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Merchant> Merchants { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public MostraContext(DbContextOptions<MostraContext> options) : base(options)
         {

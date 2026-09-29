@@ -17,6 +17,7 @@ using NSwag.Generation.Processors.Security;
 using System.Text;
 using System.Threading.RateLimiting;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -101,6 +102,8 @@ builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 builder.Services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
 builder.Services.AddScoped<IImageStorageService, CloudinaryImageStorageService>();
 builder.Services.AddHostedService<HardDeleteExpiredEntitiesJob>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddDbContext<MostraContext>(options =>
 {

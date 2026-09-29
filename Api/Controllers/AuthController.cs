@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mostra.Application.Auth.Register;
 using Mostra.Application.Auth.Login;
+using Mostra.Application.Auth.Logout;
+using Mostra.Application.Auth.Refresh;
+using Mostra.Application.Auth.Register;
 
 namespace Mostra.Api.Controllers
 {
@@ -25,6 +27,20 @@ namespace Mostra.Api.Controllers
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(RefreshTokenRequestDto request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(LogoutRequestDto request, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(request, cancellationToken);
+            return NoContent();
         }
     }
 }

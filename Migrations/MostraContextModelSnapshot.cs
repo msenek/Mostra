@@ -181,6 +181,34 @@ namespace Mostra.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Mostra.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MerchantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MerchantId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Mostra.Domain.Entities.Business", b =>
                 {
                     b.HasOne("Mostra.Domain.Entities.Merchant", "Merchant")
@@ -222,6 +250,17 @@ namespace Mostra.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Mostra.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Mostra.Domain.Entities.Merchant", "Merchant")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Merchant");
+                });
+
             modelBuilder.Entity("Mostra.Domain.Entities.Business", b =>
                 {
                     b.Navigation("Categories");
@@ -237,6 +276,8 @@ namespace Mostra.Migrations
             modelBuilder.Entity("Mostra.Domain.Entities.Merchant", b =>
                 {
                     b.Navigation("Businesses");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }
