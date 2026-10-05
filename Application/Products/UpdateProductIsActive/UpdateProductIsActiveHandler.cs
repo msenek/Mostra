@@ -1,18 +1,18 @@
 ﻿using MediatR;
-using Mostra.Application.Catalog.GetPublicCatalog;
 using Mostra.Application.Exceptions;
 using Mostra.Application.Interfaces;
-using Mostra.Application.Products.CreateProduct;
-using Mostra.Application.Products.UpdateProduct;
 
 namespace Mostra.Application.Products.UpdateProductIsActive
 {
     public class UpdateProductIsActiveHandler : IRequestHandler<UpdateProductIsActiveRequestDto, UpdateProductIsActiveResponseDto>
     {
         private readonly IProductRepository _repository;
-        public UpdateProductIsActiveHandler(IProductRepository repository)
+        private readonly ICacheInvalidationService _cacheInvalidation;
+
+        public UpdateProductIsActiveHandler(IProductRepository repository, ICacheInvalidationService cacheInvalidation)
         {
             _repository = repository;
+            _cacheInvalidation = cacheInvalidation;
         }
 
         public async Task<UpdateProductIsActiveResponseDto> Handle(UpdateProductIsActiveRequestDto requestDto, CancellationToken cancellationToken)
@@ -31,11 +31,12 @@ namespace Mostra.Application.Products.UpdateProductIsActive
 
             await _repository.UpdateProductAsync(product, cancellationToken);
 
+            await _cacheInvalidation.InvalidateCatalogAsync(product.BusinessId, cancellationToken);
+
             return new UpdateProductIsActiveResponseDto()
             {
                 IsActive = product.IsActive
             };
         }
-
     }
 }
