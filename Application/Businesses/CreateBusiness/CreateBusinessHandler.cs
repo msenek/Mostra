@@ -12,6 +12,7 @@ namespace Mostra.Application.Businesses.CreateBusiness
         private readonly IBusinessRepository _businessRepository;
         private readonly ICurrentUserService _currentUser;
 
+
         public CreateBusinessHandler(IBusinessRepository businessRepository, ICurrentUserService currentUser)
         {
             _businessRepository = businessRepository;
@@ -31,12 +32,14 @@ namespace Mostra.Application.Businesses.CreateBusiness
             };
             var savedBusiness = await _businessRepository.CreateAsync(business, cancellationToken);
 
+
             return new CreateBusinessResponseDto
             {
                 Id = savedBusiness.Id,
                 Name = savedBusiness.Name,
                 UniqueSlug = savedBusiness.UniqueSlug
             };
+            
         }
         private string GenerateSlug(string text)
         {
@@ -47,5 +50,6 @@ namespace Mostra.Application.Businesses.CreateBusiness
             var clean = new string(withoutAccents).Replace("ñ", "n");
             return Regex.Replace(clean, @"[^a-z0-9\s-]", "").Replace(" ", "-");
         }
+        
     }
 }

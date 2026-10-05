@@ -7,8 +7,13 @@ namespace Mostra.Application.Products.UpdateProduct
     public class UpdateProductHandler : IRequestHandler<UpdateProductRequestDto, UpdateProductResponseDto>
     {
         private readonly IProductRepository _repository;
+        private readonly ICacheInvalidationService _cacheInvalidation;
 
-        public UpdateProductHandler(IProductRepository repository) => _repository = repository;
+        public UpdateProductHandler(IProductRepository repository, ICacheInvalidationService cacheInvalidation)
+        {
+            _repository = repository;
+            _cacheInvalidation = cacheInvalidation;
+        }
 
         public async Task<UpdateProductResponseDto> Handle(UpdateProductRequestDto requestDto, CancellationToken cancellationToken)
         {
@@ -34,6 +39,8 @@ namespace Mostra.Application.Products.UpdateProduct
 
 
             await _repository.UpdateProductAsync(product, cancellationToken);
+
+            await _cacheInvalidation.InvalidateCatalogAsync(product.BusinessId, cancellationToken);
 
             return new UpdateProductResponseDto()
             {

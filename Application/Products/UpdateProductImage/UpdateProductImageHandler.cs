@@ -7,11 +7,14 @@ public class UpdateProductImageHandler : IRequestHandler<UpdateProductImageReque
 {
     private readonly IProductRepository _repository;
     private readonly IImageStorageService _imageStorage;
+    private readonly ICacheInvalidationService _cacheInvalidation;
 
-    public UpdateProductImageHandler(IProductRepository repository, IImageStorageService imageStorage)
+
+    public UpdateProductImageHandler(IProductRepository repository, IImageStorageService imageStorage, ICacheInvalidationService cacheInvalidation)
     {
         _repository = repository;
         _imageStorage = imageStorage;
+        _cacheInvalidation = cacheInvalidation;
     }
 
     public async Task<UpdateProductImageResponseDto> Handle(UpdateProductImageRequestDto request, CancellationToken cancellationToken)
@@ -32,6 +35,8 @@ public class UpdateProductImageHandler : IRequestHandler<UpdateProductImageReque
         product.ImagePublicId = fileName;
         await _repository.UpdateProductAsync(product, cancellationToken);
 
+        await _cacheInvalidation.InvalidateCatalogAsync(product.BusinessId, cancellationToken);
+        
         return new UpdateProductImageResponseDto
         { 
             ImageUrl = imageUrl 

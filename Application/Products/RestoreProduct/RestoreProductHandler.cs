@@ -8,12 +8,16 @@ public class RestoreProductHandler : IRequestHandler<RestoreProductRequestDto, R
     private readonly IProductRepository _repository;
     private readonly IBusinessRepository _businessRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly ICacheInvalidationService _cacheInvalidation;
 
-    public RestoreProductHandler(IProductRepository repository, IBusinessRepository businessRepository, ICurrentUserService currentUser)
+
+    public RestoreProductHandler(IProductRepository repository, IBusinessRepository businessRepository, ICurrentUserService currentUser, ICacheInvalidationService cacheInvalidation)
     {
         _repository = repository;
         _businessRepository = businessRepository;
         _currentUser = currentUser;
+        _cacheInvalidation = cacheInvalidation;
+
     }
 
     public async Task<RestoreProductResponseDto> Handle(RestoreProductRequestDto request, CancellationToken cancellationToken)
@@ -28,6 +32,8 @@ public class RestoreProductHandler : IRequestHandler<RestoreProductRequestDto, R
 
         product.Restore();
         await _repository.UpdateProductAsync(product, cancellationToken);
+
+        await _cacheInvalidation.InvalidateCatalogAsync(product.BusinessId, cancellationToken);
 
         return new RestoreProductResponseDto 
         { 

@@ -8,11 +8,15 @@ namespace Mostra.Application.Products.DeleteProductImage
     {
         private readonly IProductRepository _repository;
         private readonly IImageStorageService _imageStorage;
+        private readonly ICacheInvalidationService _cacheInvalidation;
 
-        public DeleteProductImageHandler(IProductRepository repository, IImageStorageService imageStorage)
+
+        public DeleteProductImageHandler(IProductRepository repository, IImageStorageService imageStorage, ICacheInvalidationService cacheInvalidation)
         {
             _repository = repository;
             _imageStorage = imageStorage;
+            _cacheInvalidation = cacheInvalidation;
+
         }
 
         public async Task<Unit> Handle(DeleteProductImageRequestDto request, CancellationToken cancellationToken)
@@ -29,6 +33,7 @@ namespace Mostra.Application.Products.DeleteProductImage
                 await _repository.UpdateProductAsync(product, cancellationToken);
             }
 
+            await _cacheInvalidation.InvalidateCatalogAsync(product.BusinessId, cancellationToken);
             return Unit.Value;
         }
     }

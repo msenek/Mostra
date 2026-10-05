@@ -14,11 +14,13 @@ using Mostra.Infrastructure.Repository;
 using Mostra.Infrastructure.Services;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using StackExchange.Redis;
 using System.Text;
 using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddControllers();
 
@@ -76,7 +78,7 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit = 0;
     });
 });
-
+//swagger
 builder.Services.AddOpenApiDocument(config =>
 {
     config.Title = "Mostra API";
@@ -93,6 +95,15 @@ builder.Services.AddOpenApiDocument(config =>
     config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 
+//redis
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = builder.Configuration["Redis:ConnectionString"];
+    return ConnectionMultiplexer.Connect(configuration!);
+});
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+
+//services
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -104,12 +115,15 @@ builder.Services.AddScoped<IImageStorageService, CloudinaryImageStorageService>(
 builder.Services.AddHostedService<HardDeleteExpiredEntitiesJob>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICacheInvalidationService, CacheInvalidationService>();
 
+//context
 builder.Services.AddDbContext<MostraContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
 });
 
+//mediatr
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<CreateProductRequestDto>());
 

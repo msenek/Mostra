@@ -7,8 +7,17 @@ namespace Mostra.Application.Categories.DeleteCategory
     public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryRequestDto, Unit>
     {
         private readonly ICategoryRepository _repository;
+        private readonly ICacheInvalidationService _cacheInvalidation;
 
-        public DeleteCategoryHandler(ICategoryRepository repository) => _repository = repository;
+
+
+        public DeleteCategoryHandler(ICategoryRepository repository, ICacheInvalidationService cacheInvalidation)
+        {
+            _repository = repository;
+            _cacheInvalidation = cacheInvalidation;
+
+        }
+
 
         public async Task<Unit> Handle(DeleteCategoryRequestDto request, CancellationToken cancellationToken)
         {
@@ -17,6 +26,8 @@ namespace Mostra.Application.Categories.DeleteCategory
 
             category.MarkAsDeleted();
             await _repository.DeleteAsync(category, cancellationToken);
+
+            await _cacheInvalidation.InvalidateCatalogAsync(category.BusinessId, cancellationToken);
 
             return Unit.Value;
         }

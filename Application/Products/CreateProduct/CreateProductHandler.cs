@@ -10,10 +10,12 @@ namespace Mostra.Application.Products.CreateProduct
     {
         private readonly IProductRepository _repository;
         private readonly ICategoryRepository _categoryRepository;
-        public CreateProductHandler(IProductRepository repository, ICategoryRepository categoryRepository)
+        private readonly ICacheInvalidationService _cacheInvalidation;
+        public CreateProductHandler(IProductRepository repository, ICategoryRepository categoryRepository, ICacheInvalidationService cacheInvalidation)
         {
             _categoryRepository = categoryRepository;
             _repository = repository;
+            _cacheInvalidation = cacheInvalidation;
         }
 
         public async Task<CreateProductResponseDto> Handle(CreateProductRequestDto requestDto, CancellationToken cancellationToken)
@@ -43,6 +45,8 @@ namespace Mostra.Application.Products.CreateProduct
             };
 
             var savedProduct = await _repository.CreateProductAsync(product, cancellationToken);
+
+            await _cacheInvalidation.InvalidateCatalogAsync(requestDto.BusinessId, cancellationToken);
 
 
             var response = new CreateProductResponseDto()

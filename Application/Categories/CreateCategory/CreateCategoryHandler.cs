@@ -7,10 +7,13 @@ namespace Mostra.Application.Categories.CreateCategory
     public class CreateCategoryHandler : IRequestHandler<CreateCategoryRequestDto, CreateCategoryResponseDto>
     {
         private readonly ICategoryRepository _repository;
+        private readonly ICacheInvalidationService _cacheInvalidation;
 
-        public CreateCategoryHandler(ICategoryRepository repository)
+
+        public CreateCategoryHandler(ICategoryRepository repository, ICacheInvalidationService cacheInvalidation)
         {
             _repository = repository;
+            _cacheInvalidation = cacheInvalidation;
         }
 
         public async Task<CreateCategoryResponseDto> Handle(CreateCategoryRequestDto request, CancellationToken cancellationToken)
@@ -23,6 +26,8 @@ namespace Mostra.Application.Categories.CreateCategory
             };
 
             var savedCategory = await _repository.CreateAsync(category, cancellationToken);
+
+            await _cacheInvalidation.InvalidateCatalogAsync(category.BusinessId, cancellationToken);
 
             return new CreateCategoryResponseDto
             {

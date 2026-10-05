@@ -7,8 +7,13 @@ namespace Mostra.Application.Products.DeleteProduct
     public class DeleteProductHandler : IRequestHandler<DeleteProductRequestDto, Unit>
     {
         private readonly IProductRepository _repository;
+        private readonly ICacheInvalidationService _cacheInvalidation;
 
-        public DeleteProductHandler(IProductRepository repository) => _repository = repository;
+        public DeleteProductHandler(IProductRepository repository, ICacheInvalidationService cacheInvalidation)
+        {
+            _repository = repository;
+            _cacheInvalidation = cacheInvalidation;
+        }
 
         public async Task<Unit> Handle(DeleteProductRequestDto request, CancellationToken cancellationToken)
         {
@@ -21,6 +26,7 @@ namespace Mostra.Application.Products.DeleteProduct
             
             await _repository.DeleteProductAsync(product, cancellationToken);
 
+            await _cacheInvalidation.InvalidateCatalogAsync(product.BusinessId, cancellationToken);
 
             return Unit.Value;
         }
