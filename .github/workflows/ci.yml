@@ -19,16 +19,15 @@ jobs:
     - name: Configurar .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x' # Ajusta a la versión de .NET que use Mostra
-
+        dotnet-version: '10.0.x' 
     
-    - name: Restaurar dependencias
-      run: dotnet restore Mostra.sln
+    - name: Restore
+      run: dotnet restore Mostra.slnx
 
    
     - name: Compilar solución
-      run: dotnet build Mostra.sln --configuration Release --no-restore
+      run: dotnet build Mostra.slnx --configuration Release --no-restore
 
     
     - name: Ejecutar pruebas unitarias
-      run: dotnet test Mostra.sln --configuration Release --no-build --verbosity normal
+      run: dotnet test Mostra.slnx --configuration Release --no-build --verbosity normal
