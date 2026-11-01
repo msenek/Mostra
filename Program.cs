@@ -96,12 +96,10 @@ builder.Services.AddOpenApiDocument(config =>
 });
 
 //redis
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+builder.Services.AddStackExchangeRedisCache(options =>
 {
-    var configuration = builder.Configuration["Redis:ConnectionString"];
-    return ConnectionMultiplexer.Connect(configuration!);
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
 });
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
 //services
 builder.Services.AddHttpContextAccessor();
